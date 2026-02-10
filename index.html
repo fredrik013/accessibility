@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="sv">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Accessibility Repo - Lär dig A11y</title>
+    <style>
+        body { font-family: sans-serif; line-height: 1.6; max-width: 800px; margin: 40px auto; padding: 20px; }
+        section { border: 1px solid #ddd; padding: 20px; margin-bottom: 30px; border-radius: 8px; }
+        code { background: #f4f4f4; padding: 2px 5px; border-radius: 4px; }
+        .explanation { background: #e7f3ff; padding: 15px; border-left: 5px solid #2196F3; margin-top: 10px; }
+        .sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0,0,0,0); border: 0; }
+    </style>
+</head>
+<body>
+
+    <header>
+        <h1>Tillgänglighetsguiden</h1>
+        <p>Ett interaktivt bibliotek för att förstå ARIA och semantisk HTML.</p>
+    </header>
+
+    <main id="main-content">
+        
+        <section id="search-example">
+            <h2>1. Sökfunktionen (Landmärken & Labels)</h2>
+            <p>I komponenten <code>Experiences</code> använder vi en sökmodul. Här är de viktigaste delarna:</p>
+            
+            <div class="explanation">
+                <h3>Vad vi har gjort:</h3>
+                <ul>
+                    <li><strong>role="search":</strong> Markerar hela sektionen som ett landmärke.</li>
+                    <li><strong>aria-describedby:</strong> Kopplar ihop textfältet med en osynlig instruktion.</li>
+                </ul>
+            </div>
+
+            <div class="code-block">
+                <pre>
+&lt;div role="search" aria-label="Sök upplevelser"&gt;
+  &lt;input role="searchbox" aria-describedby="desc-id" /&gt;
+  &lt;div id="desc-id" class="sr-only"&gt;Sök genom att skriva namn...&lt;/div&gt;
+&lt;/div&gt;
+                </pre>
+            </div>
+        </section>
+
+        </main>
+
+</body>
+</html>
