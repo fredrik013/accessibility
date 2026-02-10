@@ -3,47 +3,160 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Accessibility Repo - Lär dig A11y</title>
+    <title>Accessibility Explorer - Fredrik Andersson</title>
     <style>
-        body { font-family: sans-serif; line-height: 1.6; max-width: 800px; margin: 40px auto; padding: 20px; }
+        body { font-family: sans-serif; line-height: 1.6; max-width: 800px; margin: 40px auto; padding: 20px; color: #333; }
+        header { border-bottom: 2px solid #2196F3; margin-bottom: 30px; padding-bottom: 10px; }
         section { border: 1px solid #ddd; padding: 20px; margin-bottom: 30px; border-radius: 8px; }
-        code { background: #f4f4f4; padding: 2px 5px; border-radius: 4px; }
-        .explanation { background: #e7f3ff; padding: 15px; border-left: 5px solid #2196F3; margin-top: 10px; }
-        .sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0,0,0,0); border: 0; }
+        code { background: #f4f4f4; padding: 2px 5px; border-radius: 4px; font-family: monospace; color: #d63384; }
+        pre { background: #f4f4f4; padding: 15px; overflow-x: auto; border-radius: 4px; border: 1px solid #eee; }
+        .explanation { background: #e7f3ff; padding: 15px; border-left: 5px solid #2196F3; margin: 20px 0; }
+        .tip-box { background: #fff3cd; padding: 15px; border-left: 5px solid #ffc107; margin: 20px 0; }
+        
+        /* Denna klass döljer text visuellt men behåller den för skärmläsare */
+        .sr-only { 
+            position: absolute; 
+            width: 1px; 
+            height: 1px; 
+            padding: 0; 
+            margin: -1px; 
+            overflow: hidden; 
+            clip: rect(0,0,0,0); 
+            border: 0; 
+        }
+
+        /* Skip-link som blir synlig vid fokus */
+        .skip-link {
+            position: absolute;
+            top: -60px;
+            left: 10px;
+            background: #2196F3;
+            color: white;
+            padding: 10px 20px;
+            z-index: 100;
+            text-decoration: none;
+            font-weight: bold;
+            border-radius: 0 0 5px 5px;
+            transition: top 0.2s;
+        }
+        .skip-link:focus {
+            top: 0;
+        }
     </style>
 </head>
 <body>
 
+    <a class="skip-link" href="#main-content">Hoppa till huvudinnehåll</a>
+
     <header>
         <h1>Tillgänglighetsguiden</h1>
-        <p>Ett interaktivt bibliotek för att förstå ARIA och semantisk HTML.</p>
+        <p><strong>Skapad av: Fredrik Andersson</strong></p>
     </header>
 
-    <main id="main-content">
+    <main id="main-content" tabindex="-1">
         
-        <section id="search-example">
-            <h2>1. Sökfunktionen (Landmärken & Labels)</h2>
-            <p>I komponenten <code>Experiences</code> använder vi en sökmodul. Här är de viktigaste delarna:</p>
-            
+        <section id="about">
+            <h2>Om guiden</h2>
+            <p>
+                Här delar jag med mig av mina kunskaper och erfarenheter av att arbeta med tillgänglighet för skärmläsare. 
+                Mitt perspektiv är lite speciellt: <strong>jag är själv blind och använder dessa hjälpmedel varje dag.</strong>
+            </p>
+            <p>
+                Jag påbörjade min resa inom systemutveckling i april 2024. När jag lärde mig grunderna i HTML 
+                insåg jag snabbt hur stor skillnad små medel kan göra. Det är ofta förvånansvärt enkelt att göra 
+                en webbsida tillgänglig – om man bara vet <em>hur</em> man ska göra och <em>varför</em>.
+            </p>
+            <p>
+                Eftersom jag själv är i början av min karriär är guiden under ständig utveckling. Den gör inte anspråk 
+                på att vara ett fullständigt facit, men min förhoppning är att den ska ge dig en stabil grund att stå på.
+            </p>
+
             <div class="explanation">
-                <h3>Vad vi har gjort:</h3>
+                <h3>Hur jag "läser" din kod</h3>
+                <p>För att förstå exemplen i den här guiden är det bra att veta hur min skärmläsare tolkar din HTML:</p>
                 <ul>
-                    <li><strong>role="search":</strong> Markerar hela sektionen som ett landmärke.</li>
-                    <li><strong>aria-describedby:</strong> Kopplar ihop textfältet med en osynlig instruktion.</li>
+                    <li><strong>Kartan:</strong> Jag hoppar mellan landmärken (som <code>main</code>, <code>nav</code> och <code>search</code>).</li>
+                    <li><strong>Verktygen:</strong> Jag navigerar från knapp till knapp. Utan rätt namn vet jag inte vad de gör.</li>
+                    <li><strong>Berättelsen:</strong> Jag läser rubriker och brödtext för att ta till mig informationen.</li>
+                </ul>
+            </div>
+        </section>
+
+        <section id="aria-labels">
+            <h2>1. Namnge det osynliga (Aria-labels)</h2>
+            <p>
+                Många moderna webbsidor använder ikoner istället för text. För en seende är ett hjärta en sökknapp, 
+                men för min skärmläsare är det bara "Knapp". Med <code>aria-label</code> tänder vi ljuset.
+            </p>
+
+            <div class="explanation">
+                <h3>Lösningen: Ge elementet ett namn</h3>
+                <p>
+                    Genom att använda <code>aria-label</code> kan du ge knappen ett namn som bara jag hör, 
+                    utan att det ändrar sidans utseende.
+                </p>
+            </div>
+
+            <div class="code-block">
+                <p><strong>❌ Dåligt (Jag hör bara "Knapp"):</strong></p>
+                <pre><code>&lt;button&gt; ❤️ &lt;/button&gt;</code></pre>
+
+                <p><strong>✅ Bra (Jag hör "Lägg till i favoriter, knapp"):</strong></p>
+                <pre><code>&lt;button aria-label="Lägg till i favoriter"&gt; ❤️ &lt;/button&gt;</code></pre>
+            </div>
+
+            <div class="tip-box">
+                <strong>Fredriks tips:</strong> Använd alltid riktiga HTML-taggar som <code>&lt;button&gt;</code>. 
+                Om du bygger en knapp av en <code>&lt;div&gt;</code> fattar inte min skärmläsare att den går att klicka på!
+            </div>
+        </section>
+
+       <section id="links-vs-buttons">
+            <h2>2. Länkar eller Knappar? (Välj rätt verktyg)</h2>
+            <p>
+                Det här är ett av de vanligaste felen på webben. Man designar en länk så att den ser ut som en knapp, 
+                eller använder en knapp för att navigera. För mig är skillnaden i funktion helt avgörande.
+            </p>
+
+            <div class="explanation">
+                <h3>Varför det spelar roll för mig:</h3>
+                <ul>
+                    <li><strong>Länkar (<code>&lt;a&gt;</code>):</strong> När jag hör "Länk" förväntar jag mig att bli förflyttad till en ny sida eller sektion.</li>
+                    <li><strong>Knappar (<code>&lt;button&gt;</code>):</strong> När jag hör "Knapp" förväntar jag mig att något ska <em>hända</em> (t.ex. öppna en meny eller skicka ett formulär).</li>
                 </ul>
             </div>
 
             <div class="code-block">
-                <pre>
-&lt;div role="search" aria-label="Sök upplevelser"&gt;
-  &lt;input role="searchbox" aria-describedby="desc-id" /&gt;
-  &lt;div id="desc-id" class="sr-only"&gt;Sök genom att skriva namn...&lt;/div&gt;
-&lt;/div&gt;
-                </pre>
+                <p><strong>✅ Rätt användning:</strong></p>
+                <pre><code>&lt;!-- För navigering --&gt;
+&lt;a href="/kontakt"&gt;Kontakta oss&lt;/a&gt;
+
+&lt;!-- För en handling --&gt;
+&lt;button type="button" onclick="save()"&gt;Spara ändringar&lt;/button&gt;</code></pre>
             </div>
         </section>
 
-        </main>
+        <section id="search-example">
+            <h2>3. Sökfunktionen (Landmärken & Labels)</h2>
+            <p>I mer komplexa moduler kombinerar vi landmärken med dolda instruktioner för att skapa sammanhang.</p>
+            
+            <div class="explanation">
+                <h3>Varför detta hjälper mig:</h3>
+                <ul>
+                    <li><strong>role="search":</strong> Gör att jag kan "hoppa" direkt till sökningen med ett kortkommando.</li>
+                    <li><strong>aria-describedby:</strong> Kopplar ihop textfältet med en extra förklaring som läses upp direkt när jag ska börja skriva.</li>
+                </ul>
+            </div>
+
+            <div class="code-block">
+                <pre><code>&lt;div role="search" aria-label="Sök upplevelser"&gt;
+  &lt;input type="text" role="searchbox" aria-describedby="desc-id" /&gt;
+  &lt;div id="desc-id" class="sr-only"&gt;Sök genom att skriva namn på upplevelser...&lt;/div&gt;
+&lt;/div&gt;</code></pre>
+            </div>
+        </section>
+
+    </main>
 
 </body>
 </html>
