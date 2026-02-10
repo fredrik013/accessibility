@@ -111,22 +111,49 @@
             </div>
         </section>
 
+       <section id="links-vs-buttons">
+            <h2>2. Länkar eller Knappar? (Välj rätt verktyg)</h2>
+            <p>
+                Det här är ett av de vanligaste felen på webben. Man designar en länk så att den ser ut som en knapp, 
+                eller använder en knapp för att navigera. För mig är skillnaden i funktion helt avgörande.
+            </p>
+
+            <div class="explanation">
+                <h3>Varför det spelar roll för mig:</h3>
+                <ul>
+                    <li><strong>Länkar (<code>&lt;a&gt;</code>):</strong> När jag hör "Länk" förväntar jag mig att bli förflyttad till en ny sida eller sektion.</li>
+                    <li><strong>Knappar (<code>&lt;button&gt;</code>):</strong> När jag hör "Knapp" förväntar jag mig att något ska <em>hända</em> (t.ex. öppna en meny eller skicka ett formulär).</li>
+                </ul>
+            </div>
+
+            <div class="code-block">
+                <p><strong>✅ Rätt användning:</strong></p>
+                <pre><code>&lt;!-- För navigering --&gt;
+&lt;a href="/kontakt"&gt;Kontakta oss&lt;/a&gt;
+
+&lt;!-- För en handling --&gt;
+&lt;button type="button" onclick="save()"&gt;Spara ändringar&lt;/button&gt;</code></pre>
+            </div>
+        </section>
+
         <section id="search-example">
-            <h2>2. Sökfunktionen (Landmärken & Labels)</h2>
-            <p>I mer komplexa moduler kombinerar vi landmärken med dolda instruktioner.</p>
+            <h2>3. Sökfunktionen (Landmärken & Labels)</h2>
+            <p>I mer komplexa moduler kombinerar vi landmärken med dolda instruktioner för att skapa sammanhang.</p>
             
             <div class="explanation">
                 <h3>Varför detta hjälper mig:</h3>
                 <ul>
-                    <li><strong>role="search":</strong> Markerar sektionen så att jag snabbt kan hitta till sökningen via min snabbvalsmeny.</li>
-                    <li><strong>aria-describedby:</strong> Kopplar ihop textfältet med en instruktion som läses upp direkt när jag ska skriva.</li>
+                    <li><strong>role="search":</strong> Gör att jag kan "hoppa" direkt till sökningen med ett kortkommando.</li>
+                    <li><strong>aria-describedby:</strong> Kopplar ihop textfältet med en extra förklaring som läses upp direkt när jag ska börja skriva.</li>
                 </ul>
             </div>
 
-            <pre><code>&lt;div role="search" aria-label="Sök upplevelser"&gt;
+            <div class="code-block">
+                <pre><code>&lt;div role="search" aria-label="Sök upplevelser"&gt;
   &lt;input type="text" role="searchbox" aria-describedby="desc-id" /&gt;
   &lt;div id="desc-id" class="sr-only"&gt;Sök genom att skriva namn på upplevelser...&lt;/div&gt;
 &lt;/div&gt;</code></pre>
+            </div>
         </section>
 
     </main>
