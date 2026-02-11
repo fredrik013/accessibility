@@ -3,13 +3,30 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Accessibility Explorer - Fredrik Andersson</title>
+    <title>Tillgänglighetsguiden - Fredrik Andersson</title>
     <style>
         body { font-family: sans-serif; line-height: 1.6; max-width: 800px; margin: 40px auto; padding: 20px; color: #333; }
         header { border-bottom: 2px solid #2196F3; margin-bottom: 30px; padding-bottom: 10px; }
         section { border: 1px solid #ddd; padding: 20px; margin-bottom: 30px; border-radius: 8px; }
         code { background: #f4f4f4; padding: 2px 5px; border-radius: 4px; font-family: monospace; color: #d63384; }
         pre { background: #f4f4f4; padding: 15px; overflow-x: auto; border-radius: 4px; border: 1px solid #eee; }
+
+        nav ul { 
+            list-style-type: none; 
+            padding: 0; 
+            display: flex; 
+            flex-wrap: wrap; 
+            gap: 15px; 
+        }
+        nav a { 
+            text-decoration: none; 
+            color: #2196F3; 
+            font-weight: bold; 
+        }
+        nav a:hover { 
+            text-decoration: underline; 
+        }
+        
         .explanation { background: #e7f3ff; padding: 15px; border-left: 5px solid #2196F3; margin: 20px 0; }
         .tip-box { background: #fff3cd; padding: 15px; border-left: 5px solid #ffc107; margin: 20px 0; }
         
@@ -44,13 +61,25 @@
         }
     </style>
 </head>
+
 <body>
 
     <a class="skip-link" href="#main-content">Hoppa till huvudinnehåll</a>
 
-    <header>
+<header>
         <h1>Tillgänglighetsguiden</h1>
         <p><strong>Skapad av: Fredrik Andersson</strong></p>
+        
+        <nav aria-label="Innehållsförteckning">
+            <h2 class="sr-only">Hoppa till kapitel</h2>
+            <ul>
+                <li><a href="#about">Om guiden</a></li>
+                <li><a href="#aria-labels">1. Namnge det osynliga (Aria-labels)</a></li>
+                <li><a href="#links-vs-buttons">2. Länkar eller Knappar?</a></li>
+                <li><a href="#search-example">3. Sökfunktionen (Relationer)</a></li>
+                <li><a href="#naming-objects">4. Namngivning av objekt (Bilder & Ikoner)</a></li>
+            </ul>
+        </nav>
     </header>
 
     <main id="main-content" tabindex="-1">
@@ -180,6 +209,50 @@
                 <strong>Varför inte bara använda placeholder?</strong> 
                 En <code>placeholder</code> försvinner ofta så fort man börjar skriva, och alla skärmläsare läser inte upp den på ett bra sätt. 
                 Genom att använda en dold text med ett <code>id</code> säkerställer vi att informationen alltid finns tillgänglig för mig.
+            </div>
+        </section>
+
+        <section id="naming-objects">
+            <h2>4. Namngivning av objekt (Bilder & Ikoner)</h2>
+            <p>
+                Hur beskriver man en bild för någon som inte ser den? Det handlar om att välja rätt verktyg 
+                beroende på om bilden är viktig för sammanhanget eller bara är där för att vara snygg.
+            </p>
+
+            <div class="explanation">
+                <h3>Bilder (<code>&lt;img&gt;</code>) och Alt-text</h3>
+                <p>
+                    För vanliga bilder använder vi <code>alt</code>-attributet. Men här är den stora hemligheten: 
+                    <strong>Ibland ska alt-texten vara tom.</strong>
+                </p>
+                <ul>
+                    <li><strong>Informativ bild:</strong> Beskriv vad bilden föreställer (t.ex. <code>alt="En röd ryggsäck för vandring"</code>).</li>
+                    <li><strong>Dekorativ bild:</strong> Om bilden bara är pynt, använd <code>alt=""</code>. Då hoppar min skärmläsare över den helt, vilket sparar mig tid.</li>
+                </ul>
+            </div>
+
+            
+
+            <div class="code-block">
+                <p><strong>✅ Exempel på SVG-ikon som knapp:</strong></p>
+                <p>Eftersom ikoner (ofta SVG) inte har en alt-tagg, använder vi <code>aria-label</code> på själva knappen.</p>
+                <pre><code>&lt;button aria-label="Stäng fönster"&gt;
+  &lt;svg aria-hidden="true"&gt;...&lt;/svg&gt;
+&lt;/button&gt;</code></pre>
+            </div>
+
+            <div class="explanation">
+                <h3>Varför står det <code>aria-hidden="true"</code> på ikonen?</h3>
+                <p>
+                    Det här är ett proffstricks! Genom att sätta <code>aria-hidden="true"</code> på själva SVG-koden 
+                    säger vi till skärmläsaren: "Ignorera den här koden, jag har redan förklarat vad knappen gör 
+                    via min label". Det förhindrar att skärmläsaren försöker läsa upp konstig kod eller "grafik".
+                </p>
+            </div>
+
+            <div class="tip-box">
+                <strong>Fredriks gyllene regel:</strong> Om en bild eller ikon inte tillför information som jag 
+                behöver för att förstå sidan – gör den osynlig för mig. Mindre brus gör sajten mer lättanvänd!
             </div>
         </section>
 
