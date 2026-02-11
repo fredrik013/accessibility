@@ -4,62 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Tillgänglighetsguiden - Fredrik Andersson</title>
-    <style>
-        body { font-family: sans-serif; line-height: 1.6; max-width: 800px; margin: 40px auto; padding: 20px; color: #333; }
-        header { border-bottom: 2px solid #2196F3; margin-bottom: 30px; padding-bottom: 10px; }
-        section { border: 1px solid #ddd; padding: 20px; margin-bottom: 30px; border-radius: 8px; }
-        code { background: #f4f4f4; padding: 2px 5px; border-radius: 4px; font-family: monospace; color: #d63384; }
-        pre { background: #f4f4f4; padding: 15px; overflow-x: auto; border-radius: 4px; border: 1px solid #eee; }
-
-        nav ul { 
-            list-style-type: none; 
-            padding: 0; 
-            display: flex; 
-            flex-wrap: wrap; 
-            gap: 15px; 
-        }
-        nav a { 
-            text-decoration: none; 
-            color: #2196F3; 
-            font-weight: bold; 
-        }
-        nav a:hover { 
-            text-decoration: underline; 
-        }
-        
-        .explanation { background: #e7f3ff; padding: 15px; border-left: 5px solid #2196F3; margin: 20px 0; }
-        .tip-box { background: #fff3cd; padding: 15px; border-left: 5px solid #ffc107; margin: 20px 0; }
-        
-        /* Denna klass döljer text visuellt men behåller den för skärmläsare */
-        .sr-only { 
-            position: absolute; 
-            width: 1px; 
-            height: 1px; 
-            padding: 0; 
-            margin: -1px; 
-            overflow: hidden; 
-            clip: rect(0,0,0,0); 
-            border: 0; 
-        }
-
-        /* Skip-link som blir synlig vid fokus */
-        .skip-link {
-            position: absolute;
-            top: -60px;
-            left: 10px;
-            background: #2196F3;
-            color: white;
-            padding: 10px 20px;
-            z-index: 100;
-            text-decoration: none;
-            font-weight: bold;
-            border-radius: 0 0 5px 5px;
-            transition: top 0.2s;
-        }
-        .skip-link:focus {
-            top: 0;
-        }
-    </style>
+    <link rel="stylesheet" href="style.css">
 </head>
 
 <body>
