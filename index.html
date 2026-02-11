@@ -23,6 +23,7 @@
                 <li><a href="#links-vs-buttons">2. Länkar eller Knappar?</a></li>
                 <li><a href="#search-example">3. Sökfunktionen (Relationer)</a></li>
                 <li><a href="#naming-objects">4. Namngivning av objekt (Bilder & Ikoner)</a></li>
+                <li><a href="#tables">5. Optimera tabeller (Struktur & Relationer)</a></li>
             </ul>
         </nav>
     </header>
@@ -198,6 +199,57 @@
             <div class="tip-box">
                 <strong>Fredriks gyllene regel:</strong> Om en bild eller ikon inte tillför information som jag 
                 behöver för att förstå sidan – gör den osynlig för mig. Mindre brus gör sajten mer lättanvänd!
+            </div>
+        </section>
+
+<section id="tables">
+            <h2>5. Optimera tabeller för skärmläsare</h2>
+            <p>
+                Tabeller är kraftfulla för att visa data, men utan rätt kod blir de en förvirrande labyrint för mig. 
+                Hemligheten ligger i att koppla samman varje cell med sin rubrik.
+            </p>
+
+            <table>
+                <caption>Viktiga element för tillgängliga tabeller</caption>
+                <thead>
+                    <tr>
+                        <th scope="col">Element</th>
+                        <th scope="col">Syfte</th>
+                        <th scope="col">Min upplevelse</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><code>&lt;caption&gt;</code></td>
+                        <td>Tabellens titel</td>
+                        <td>Jag får veta vad tabellen handlar om direkt när jag landar på den.</td>
+                    </tr>
+                    <tr>
+                        <td><code>&lt;th scope="col"&gt;</code></td>
+                        <td>Kolumnrubrik</td>
+                        <td>Skärmläsaren läser upp rubriken varje gång jag byter kolumn.</td>
+                    </tr>
+                    <tr>
+                        <td><code>&lt;th scope="row"&gt;</code></td>
+                        <td>Radrubrik</td>
+                        <td>Hjälper mig förstå vilken rad jag är på om tabellen är väldigt bred.</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <div class="explanation">
+                <h3>Varför "Scope" är din bästa vän</h3>
+                <p>
+                    Genom att använda <code>scope="col"</code> (för kolumner) eller <code>scope="row"</code> (för rader) 
+                    skapar du en osynlig bro mellan rubriken och datan. När jag navigerar i tabellen 
+                    läser skärmläsaren inte bara upp "15", utan den säger "Pris: 15". Det ger sammanhang!
+                </p>
+            </div>
+
+            <div class="tip-box">
+                <strong>Fredriks tips:</strong> Använd aldrig tabeller för att bygga layout (design). 
+                Tabeller ska bara användas för att visa data. Om du vill placera saker bredvid varandra, 
+                använd CSS Flexbox eller Grid istället – det blir mycket lättare för mig att navigera då.
             </div>
         </section>
 

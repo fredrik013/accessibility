@@ -38,6 +38,40 @@ nav a:hover, nav a:focus {
             border: 0; 
         }
 
+table {
+    width: 100%;
+    border-collapse: collapse; /* Tar bort dubbla linjer */
+    margin: 20px 0;
+}
+
+caption {
+    font-weight: bold;
+    font-size: 1.2rem;
+    margin-bottom: 10px;
+    text-align: left;
+}
+
+th {
+    background-color: #2196F3;
+    color: white;
+    text-align: left;
+    padding: 12px;
+}
+
+td {
+    padding: 10px;
+    border-bottom: 1px solid #ddd;
+}
+
+/* Gör det lättare att följa rader visuellt */
+tr:nth-child(even) {
+    background-color: #f8f9fa;
+}
+
+tr:hover {
+    background-color: #e3f2fd;
+}
+
         /* Skip-link som blir synlig vid fokus */
         .skip-link {
             position: absolute;
