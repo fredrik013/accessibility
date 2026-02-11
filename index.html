@@ -136,23 +136,50 @@
             </div>
         </section>
 
-        <section id="search-example">
-            <h2>3. Sökfunktionen (Landmärken & Labels)</h2>
-            <p>I mer komplexa moduler kombinerar vi landmärken med dolda instruktioner för att skapa sammanhang.</p>
+<section id="search-example">
+            <h2>3. Sökfunktionen (Relationer i koden)</h2>
+            <p>
+                När vi bygger en sökfunktion räcker det inte med att elementen finns där. Vi måste skapa en logisk 
+                koppling mellan dem så att skärmläsaren förstår vad som hör ihop.
+            </p>
             
+            <div class="code-block">
+                <pre><code>&lt;!-- 1. Behållaren som markerar sök-området --&gt;
+&lt;div role="search" aria-label="Sök upplevelser"&gt;
+
+  &lt;!-- 2. Inputfältet med en pekpinne (aria-describedby) --&gt;
+  &lt;input 
+    type="text" 
+    role="searchbox" 
+    aria-describedby="search-instruction" 
+    placeholder="Sök..."
+  /&gt;
+
+  &lt;!-- 3. Instruktionen som pekpinnen pekar på --&gt;
+  &lt;div id="search-instruction" class="sr-only"&gt;
+    Sök genom att skriva namn på upplevelser, resultatet uppdateras automatiskt.
+  &lt;/div&gt;
+
+&lt;/div&gt;</code></pre>
+            </div>
+
             <div class="explanation">
-                <h3>Varför detta hjälper mig:</h3>
+                <h3>Vad händer "under huven"?</h3>
                 <ul>
-                    <li><strong>role="search":</strong> Gör att jag kan "hoppa" direkt till sökningen med ett kortkommando.</li>
-                    <li><strong>aria-describedby:</strong> Kopplar ihop textfältet med en extra förklaring som läses upp direkt när jag ska börja skriva.</li>
+                    <li><strong>role="search":</strong> Detta skapar ett <em>landmärke</em>. För mig innebär det att jag kan trycka på en snabbknapp (ofta 'D' eller via en lista) för att hoppa direkt till söksektionen utan att behöva tabba förbi hela menyn.</li>
+                    <li><strong>role="searchbox":</strong> Berättar för mig att detta inte bara är vilket textfält som helst, utan ett fält specifikt byggt för sökningar.</li>
+                    <li><strong>ID-kopplingen (Den viktigaste biten):</strong> 
+                        Attributet <code>aria-describedby</code> fungerar som en osynlig länk. Den säger till skärmläsaren: 
+                        <em>"När användaren står i det här fältet, läs även upp texten som finns i elementet med ID:t <strong>search-instruction</strong>"</em>. 
+                        Det gör att jag får instruktionen direkt i örat när jag ska börja skriva.
+                    </li>
                 </ul>
             </div>
 
-            <div class="code-block">
-                <pre><code>&lt;div role="search" aria-label="Sök upplevelser"&gt;
-  &lt;input type="text" role="searchbox" aria-describedby="desc-id" /&gt;
-  &lt;div id="desc-id" class="sr-only"&gt;Sök genom att skriva namn på upplevelser...&lt;/div&gt;
-&lt;/div&gt;</code></pre>
+            <div class="tip-box">
+                <strong>Varför inte bara använda placeholder?</strong> 
+                En <code>placeholder</code> försvinner ofta så fort man börjar skriva, och alla skärmläsare läser inte upp den på ett bra sätt. 
+                Genom att använda en dold text med ett <code>id</code> säkerställer vi att informationen alltid finns tillgänglig för mig.
             </div>
         </section>
 
