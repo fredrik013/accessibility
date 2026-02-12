@@ -308,6 +308,38 @@
         <strong>Kom ihåg:</strong> Använd alltid <code>&lt;legend&gt;</code> som det första elementet inuti en <code>&lt;fieldset&gt;</code>. Det är den texten som blir min karta när jag navigerar i formuläret.
     </p>
 </div>
+
+<hr>
+    <h3>Felhantering i formulär</h3>
+    <p>
+        När ett fält är felaktigt ifyllt räcker det inte med att göra ramen röd. En skärmläsare behöver få veta det tekniskt för att kunna förmedla det till användaren.
+    </p>
+
+    <div class="example-box">
+        <label for="email-field">E-postadress (obligatoriskt):</label>
+        <input 
+            type="email" 
+            id="email-field" 
+            aria-invalid="true" 
+            aria-describedby="email-error"
+            value="felaktig-adress.se"
+        >
+        <p id="email-error" style="color: #d32f2f; font-weight: bold;">
+            <strong>Fel:</strong> E-postadressen måste innehålla ett @-tecken.
+        </p>
+    </div>
+
+    <p class="explanation">
+        <strong>Varför detta fungerar:</strong><br>
+        1. <code>aria-invalid="true"</code> talar om för mig att "något är fel här".<br>
+        2. <code>aria-describedby="email-error"</code> gör att skärmläsaren läser upp själva felmeddelandet direkt efter etiketten när jag tabbar till fältet.
+    </p>
+
+    <div class="tip-box">
+        <p>
+            <strong>Proffstips:</strong> Om felmeddelandet dyker upp dynamiskt (utan att sidan laddas om), kan du använda <code>role="alert"</code> på felmeddelandet för att skärmläsaren ska ropa ut felet direkt när det uppstår.
+        </p>
+    </div>
 </section>
 
     </main>
