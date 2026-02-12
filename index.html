@@ -16,7 +16,7 @@
         <p><strong>Skapad av: Fredrik Andersson</strong></p>
         
         <nav aria-label="Innehållsförteckning">
-            <h2 class="sr-only">Hoppa till kapitel</h2>
+            <h2 class="sr-only">Innehållsförteckning</h2>
             <ul>
                 <li><a href="#about">Om guiden</a></li>
                 <li><a href="#aria-labels">1. Namnge det osynliga (Aria-labels)</a></li>
@@ -24,6 +24,7 @@
                 <li><a href="#search-example">3. Sökfunktionen (Relationer)</a></li>
                 <li><a href="#naming-objects">4. Namngivning av objekt (Bilder & Ikoner)</a></li>
                 <li><a href="#tables">5. Optimera tabeller (Struktur & Relationer)</a></li>
+                <li><a href="#forms-chapter">6. Tillgängliga Formulär</a></li>
             </ul>
         </nav>
     </header>
@@ -252,6 +253,62 @@
                 använd CSS Flexbox eller Grid istället – det blir mycket lättare för mig att navigera då.
             </div>
         </section>
+
+<section id="forms-chapter">
+    <h2>6. Tillgängliga Formulär</h2>
+    
+    <p class="explanation">
+        Ett tillgängligt formulär handlar om tydliga relationer. En seende person ser kopplingen mellan en etikett och ett fält, men för en skärmläsare måste vi bygga en teknisk bro.
+    </p>
+
+    <h3>Kopplingen: Label och ID</h3>
+    <p>
+        För att jag som använder skärmläsare ska veta vad jag ska skriva i ett fält, måste fältet ha ett unikt <code>id</code> som matchas av en <code>label</code> med ett <code>for</code>-attribut. 
+    </p>
+
+    <div class="example-box">
+        <label for="first-name">Förnamn:</label>
+        <input type="text" id="first-name" name="firstname" autocomplete="given-name">
+    </div>
+
+    <h3>Gruppering med Fieldset och Legend</h3>
+    <p>
+        Ibland räcker det inte med en etikett. Om du har flera val (som radioknappar), behöver jag veta <em>sammanhanget</em>. Här använder vi <code>&lt;fieldset&gt;</code> för att gruppera och <code>&lt;legend&gt;</code> som gruppens rubrik.
+    </p>
+
+    <div class="example-box">
+        <fieldset>
+            <legend>Hur vill du bli kontaktad?</legend>
+            
+            <input type="radio" id="contact-email" name="contact" value="email">
+            <label for="contact-email">Via e-post</label><br>
+            
+            <input type="radio" id="contact-phone" name="contact" value="phone">
+            <label for="contact-phone">Via telefon</label>
+        </fieldset>
+    </div>
+
+    <div class="tip-box">
+        <p>
+            <strong>Tips:</strong> Om du behöver lägga till extra instruktioner, kom ihåg att använda <code>aria-describedby</code>. Du kan repetera hur det fungerar i kapitlet om 
+            <a href="#search-example">Sökfunktionen och relationer</a>.
+        </p>
+    </div>
+
+<h3>Varför Fieldset och inte bara en rubrik?</h3>
+<p>
+    Många gör felet att bara använda en vanlig <code>&lt;h3&gt;</code> ovanför sina fält. Problemet är att jag som använder skärmläsare tappar bort rubriken så fort jag börjar tabba mellan fälten. 
+</p>
+<p class="explanation">
+    <strong>Skillnaden mot role="group":</strong> Medan <code>role="group"</code> kan användas för att gruppera vad som helst på en sida, är <code>&lt;fieldset&gt;</code> speciellt byggt för formulär. Det har ett inbyggt samspel med skärmläsaren som gör att "legend-texten" följer med mig in i varje fält.
+</p>
+
+<div class="tip-box">
+    <p>
+        <strong>Kom ihåg:</strong> Använd alltid <code>&lt;legend&gt;</code> som det första elementet inuti en <code>&lt;fieldset&gt;</code>. Det är den texten som blir min karta när jag navigerar i formuläret.
+    </p>
+</div>
+</section>
 
     </main>
 
