@@ -26,6 +26,7 @@
                 <li><a href="#tables">5. Optimera tabeller (Struktur & Relationer)</a></li>
                 <li><a href="#forms-chapter">6. Tillgängliga Formulär</a></li>
                 <li><a href="#check-radio-chapter">7. Checkboxar, Radioknappar och Brytare</a></li>
+                <li><a href="#menus-chapter">8. Menyer och Dropdowns</a></li>
             </ul>
         </nav>
     </header>
@@ -395,7 +396,103 @@
     </div>
 </section>
 
+<section id="menus-chapter">
+    <h2>8. Menyer och Dropdowns</h2>
+    <p class="explanation">
+        Det finns två huvudtyper av listor med val på webben. Att välja rätt typ är avgörande för att jag som använder skärmläsare ska förstå hur jag förväntas interagera med dem.
+    </p>
+
+    <hr>
+
+    <h3>Typ A: Navigeringsmenyer (Utfällbara)</h3>
+    <p>
+        Dessa används när du vill visa en lista med länkar eller funktioner. Här måste vi kommunicera tillståndet manuellt eftersom vi ofta använder knappar för att styra listor.
+    </p>
+
+    <div class="example-box">
+        <button 
+            type="button" 
+            id="menu-btn" 
+            aria-haspopup="true" 
+            aria-expanded="false" 
+            aria-controls="dropdown-list"
+        >
+            Inställningar
+        </button>
+
+        <ul id="dropdown-list" style="display: none; list-style: none; padding: 10px; border: 1px solid #ccc;">
+            <li><a href="#">Min profil</a></li>
+            <li><a href="#">Säkerhetsinställningar</a></li>
+            <li><a href="#">Logga ut</a></li>
+        </ul>
+    </div>
+
+    <p class="explanation">
+        <strong>Viktiga attribut för Navigeringsmenyer:</strong><br>
+        * <code>aria-haspopup="true"</code>: Förvarnar om att knappen öppnar något extra.<br>
+        * <code>aria-expanded</code>: Ändras mellan <em>true</em> och <em>false</em> via JavaScript så att jag hör "Öppen" eller "Stängd".<br>
+        * <code>aria-controls</code>: Kopplar ihop knappen med listans unika ID.
+    </p>
+
+    
+
+    <hr>
+
+    <h3>Typ B: Rullgardiner (Standard Select-menyer)</h3>
+    <p>
+        Används när användaren ska välja ett alternativ i ett formulär (t.ex. vid en beställning). Här sköter webbläsaren all tillgänglighet automatiskt.
+    </p>
+
+    <div class="example-box">
+        <label for="drink-select">Vad vill du dricka till maten?</label>
+        <br>
+        <select id="drink-select">
+            <option value="water">Källvatten</option>
+            <option value="juice">Äppeljuice</option>
+            <option value="cider">Alkoholfri cider</option>
+        </select>
+    </div>
+
+    <div class="tip-box">
+        <p>
+            <strong>Varför Select är bra:</strong> Som skärmläsaranvändare hör jag direkt min position, t.ex. "Äppeljuice, 2 av 3". Jag kan också snabbsöka genom att trycka på första bokstaven i alternativet jag letar efter.
+        </p>
+    </div>
+
+    
+
+    <h3>Sammanfattning: Vad ska jag välja?</h3>
+    <ul>
+        <li><strong>Välj Navigeringsmeny (Typ A):</strong> Om användaren ska <em>navigera</em> till en ny sida eller fälla ut en verktygsmeny.</li>
+        <li><strong>Välj Rullgardin (Typ B):</strong> Om användaren ska <em>välja ett värde</em> som ska skickas in i ett formulär.</li>
+    </ul>
+</section>
+
     </main>
+
+<script>
+        const btn = document.getElementById('menu-btn');
+        const list = document.getElementById('dropdown-list');
+
+        btn.addEventListener('click', () => {
+            const isExpanded = btn.getAttribute('aria-expanded') === 'true';
+            
+            // Växla status
+            btn.setAttribute('aria-expanded', !isExpanded);
+            
+            // Visa/dölj listan visuellt
+            list.style.display = isExpanded ? 'none' : 'block';
+        });
+
+        // Stäng menyn med Escape-tangenten (viktigt för tillgänglighet!)
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape' && btn.getAttribute('aria-expanded') === 'true') {
+                btn.setAttribute('aria-expanded', 'false');
+                list.style.display = 'none';
+                btn.focus(); // Skicka tillbaka fokus till knappen
+            }
+        });
+    </script>
 
 </body>
 </html>
