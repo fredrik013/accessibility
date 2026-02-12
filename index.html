@@ -25,6 +25,7 @@
                 <li><a href="#naming-objects">4. Namngivning av objekt (Bilder & Ikoner)</a></li>
                 <li><a href="#tables">5. Optimera tabeller (Struktur & Relationer)</a></li>
                 <li><a href="#forms-chapter">6. Tillgängliga Formulär</a></li>
+                <li><a href="#check-radio-chapter">7. Checkboxar, Radioknappar och Brytare</a></li>
             </ul>
         </nav>
     </header>
@@ -338,6 +339,58 @@
     <div class="tip-box">
         <p>
             <strong>Proffstips:</strong> Om felmeddelandet dyker upp dynamiskt (utan att sidan laddas om), kan du använda <code>role="alert"</code> på felmeddelandet för att skärmläsaren ska ropa ut felet direkt när det uppstår.
+        </p>
+    </div>
+</section>
+
+<section id="check-radio-chapter">
+    <h2>7. Checkboxar, Radioknappar och Brytare</h2>
+    
+    <p class="explanation">
+        Dessa kontroller används för att göra val. För oss som använder skärmläsare är det viktigt att veta om vi väljer <em>ett</em> alternativ eller om vi kan kryssa i <em>flera</em>.
+    </p>
+
+    <h3>Radioknappar (Välj ett)</h3>
+    <div class="example-box">
+        <fieldset>
+            <legend>Vilken dryck föredrar du till lunch?</legend>
+            <input type="radio" id="water" name="drink" value="water">
+            <label for="water">Källvatten</label><br>
+            
+            <input type="radio" id="juice" name="drink" value="juice">
+            <label for="juice">Äppeljuice</label><br>
+
+            <input type="radio" id="soda" name="drink" value="soda">
+            <label for="soda">Alkoholfri cider</label>
+        </fieldset>
+    </div>
+
+    <h3>Checkboxar (Välj flera)</h3>
+    <div class="example-box">
+        <fieldset>
+            <legend>Vilka tillbehör vill du ha?</legend>
+            <input type="checkbox" id="ice" name="extra" value="ice">
+            <label for="ice">Is</label><br>
+            
+            <input type="checkbox" id="lemon" name="extra" value="lemon">
+            <label for="lemon">Citronskiva</label>
+        </fieldset>
+    </div>
+
+    <h3>Brytare (Toggles) och "Tryckt"-status</h3>
+    <p>
+        Ibland vill vi ha en knapp som fungerar som en strömbrytare (PÅ/AV). Här använder vi <code>aria-pressed</code> för att skärmläsaren ska säga "nedtryckt" eller "ej nedtryckt".
+    </p>
+
+    <div class="example-box">
+        <button type="button" aria-pressed="true" onclick="this.setAttribute('aria-pressed', this.getAttribute('aria-pressed') === 'true' ? 'false' : 'true')">
+            Mörkt läge
+        </button>
+    </div>
+
+    <div class="tip-box">
+        <p>
+            <strong>Skärmläsar-tips:</strong> När en knapp har <code>aria-pressed="true"</code>, säger min skärmläsare ofta "Nedtryckt". Detta är perfekt för inställningar som ska vara bestående, till exempel att slå på eller av ett filter.
         </p>
     </div>
 </section>
