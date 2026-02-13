@@ -29,6 +29,7 @@
         <li><a href="#check-radio-chapter">Checkboxar, Radioknappar och Brytare</a></li>
         <li><a href="#menus-chapter">Menyer och Dropdowns</a></li>
         <li><a href="#keyboard-chapter">Tangentbordsnavigering</a></li>
+        <li><a href="#react-chapter">HTML vs React (Ramverk)</a></li>
     </ol>
 </nav>
     </header>
@@ -586,6 +587,163 @@ menuList.addEventListener('keydown', (e) => {
 </div>
 </section>
 
+<section id="react-chapter">
+    <h2>10. HTML vs React: Att behålla kontrollen i ramverk</h2>
+    <p class="explanation">
+        När vi går från statisk HTML till React ändras spelreglerna. React är fantastiskt, men det kan lätt "pajja" tillgängligheten om vi inte tänker på hur DOM-trädet uppdateras.
+    </p>
+
+    <div class="example-box">
+        <h3>1. JSX och ARIA-attribut</h3>
+        <p>
+            I React skapar vi komponenter som fungerar som byggblock. En vanlig fälla är att man skapar en "snygg" knapp-komponent men glömmer att skicka med de tekniska instruktionerna (ARIA-attributen) hela vägen ner till det faktiska HTML-elementet.
+        </p>
+
+        <h4>Vad koden innebär:</h4>
+        <p>
+            I exemplet använder vi <strong>Destructuring</strong> (<code>{ label, ...rest }</code>) och <strong>Spread attributes</strong> (<code>{...rest}</code>).
+        </p>
+        <ul>
+            <li><strong>label</strong>: Vi bryter ut den specifika text som skärmläsaren ska läsa upp.</li>
+            <li><strong>...rest</strong>: Detta fungerar som en "slasktratt" som samlar ihop alla andra instruktioner du skickar (som <code>onClick</code> eller <code>id</code>) och ser till att de landar på den riktiga HTML-taggen.</li>
+        </ul>
+
+        <pre><code>
+const Button = ({ label, ...rest }) => (
+  &lt;button aria-label={label} {...rest}&gt;
+    &lt;span className="icon-menu"&gt;&lt;/span&gt;
+  &lt;/button&gt;
+);
+
+// Användning:
+&lt;Button label="Öppna huvudmeny" onClick={toggle} /&gt;
+        </code></pre>
+
+        <h4>Vad händer i praktiken?</h4>
+        <p>
+            Om du inte använde <code>...rest</code> skulle till exempel en <code>onClick</code>-händelse som du lägger på din komponent aldrig nå fram till knappen. För oss som använder skärmläsare innebär det att knappen kan bli helt "tyst" eller omöjlig att aktivera, eftersom den tekniska kopplingen bryts i React-lagret.
+        </p>
+    </div>
+
+    <div class="example-box">
+        <h3>2. Fragment istället för Div-soppa</h3>
+        <p>
+            I React måste en komponent alltid returnera ett omslutande element. Förr löste man detta genom att packa in allt i en <code>&lt;div&gt;</code>. Problemet är att den där lilla diven följer med ut i den färdiga webbsidan, och där kan den ställa till det rejält.
+        </p>
+
+        <h4>Varför är detta ett problem?</h4>
+        <p>
+            Vissa HTML-element, som tabeller (<code>&lt;tr&gt;</code>) och listor (<code>&lt;li&gt;</code>), har en strikt hierarki. Om du trycker in en extra <code>&lt;div&gt;</code> mellan en rad och en cell så bryts relationen.
+        </p>
+        <blockquote>
+            <strong>För skärmläsaren:</strong> Det upplevs som att tabellen eller listan är trasig. Man kan inte längre navigera logiskt mellan cellerna eftersom "länken" mellan dem har brutits av div-elementet.
+        </blockquote>
+
+        <h4>Korrekt kod med Fragment:</h4>
+        <pre><code>
+// RÄTT VÄG: Skapar inga extra element i DOM:en
+const TableCells = () => (
+  &lt;&gt;
+    &lt;td&gt;Namn&lt;/td&gt;
+    &lt;td&gt;Status&lt;/td&gt;
+  &lt;/&gt;
+);
+        </code></pre>
+
+        <p>
+            Genom att använda <code>&lt;&gt;</code> (kortform för Fragment) håller du React glad utan att skräpa ner den HTML-kod som skärmläsaren ska tolka.
+        </p>
+    </div>
+
+    <div class="example-box">
+        <h3>3. Route Announcing: Tala om när sidan byts</h3>
+        <p>
+            I en vanlig webbplats laddas hela sidan om när du klickar på en länk. Din skärmläsare märker det direkt, tystnar, och börjar sedan läsa upp den nya sidans titel. I React (som är en Single Page Application) byts bara innehållet ut på skärmen medan själva webbläsaren "står stilla".
+        </p>
+
+        <h4>Problemet: Den stora tystnaden</h4>
+        <p>
+            Eftersom webbläsaren inte laddas om, får skärmläsaren ingen signal om att något har hänt. Fokus stannar kvar på länken du just tryckte på, och du får ingen bekräftelse på att du faktiskt har landat på en ny sida.
+        </p>
+
+        <h4>Lösningen: En "Announcer"</h4>
+        <p>
+            Vi använder <code>aria-live="polite"</code>. Det är en instruktion till skärmläsaren att bevaka elementet och läsa upp allt som ändras inuti det, även om användaren inte har fokus där just nu.
+        </p>
+
+        <h4>Var placeras den i koden?</h4>
+        <p>
+            Den bör ligga som ett syskon till din huvudsakliga <code>&lt;main&gt;</code>-tagg eller precis innan dina Routes. Genom att ha den "globalt" i <code>App.tsx</code> ligger den alltid kvar i bakgrunden och väntar på att få ropa ut nästa sidtitel.
+        </p>
+
+        <pre><code>
+/* Exempel på placering i App.tsx */
+function App() {
+  return (
+    &lt;Router&gt;
+      &lt;Navbar /&gt; {/* Menyn ligger kvar längst upp */}
+      
+      &lt;!-- Route Announcer: Global och alltid närvarande --&gt;
+      &lt;div aria-live="polite" aria-atomic="true" class="sr-only"&gt;
+        {`Sidan ${currentPageTitle} har laddats.`}
+      &lt;/div&gt;
+
+      &lt;!-- Main-taggen markerar var det unika innehållet börjar --&gt;
+      &lt;main id="main-content"&gt;
+        &lt;Routes&gt;
+          &lt;Route path="/" element={&lt;Home /&gt;} /&gt;
+          &lt;Route path="/om" element={&lt;About /&gt;} /&gt;
+          &lt;Route path="/kontakt" element={&lt;Contact /&gt;} /&gt;
+        &lt;/Routes&gt;
+      &lt;/main&gt;
+    &lt;/Router&gt;
+  );
+}
+        </code></pre>
+
+        
+
+        <p>
+            Genom att använda <code>aria-atomic="true"</code> tvingar vi skärmläsaren att läsa upp hela meningen varje gång, även om bara sidnamnet ändras. Det gör att jag som användare aldrig behöver tveka på var jag har hamnat.
+        </p>
+    </div>
+
+    <div class="example-box">
+        <h3>4. Focus Management vid sidbyte</h3>
+        <p>
+            När du byter sida i React flyttas inte fokus automatiskt till toppen. Vi använder <code>useEffect</code> för att flytta fokus till den nya sidans huvudrubrik (<code>&lt;h1&gt;</code>) så fort sidan visas. För att en rubrik ska kunna ta emot fokus måste den ha attributet <code>tabindex="-1"</code>.
+        </p>
+        <pre><code>
+useEffect(() => {
+  headingRef.current.focus();
+}, []);
+        </code></pre>
+        <h4>Varför gör vi så här?</h4>
+        <p>
+            Genom att flytta fokus till rubriken bekräftar vi för skärmläsaren att användaren har landat rätt. Skärmläsaren börjar då läsa upp rubriken direkt.
+        </p>
+    </div>
+
+    <div class="example-box">
+        <h3>5. Formulär: htmlFor och Unika ID:n</h3>
+        <p>
+            I JSX använder vi <code>htmlFor</code> istället för <code>for</code>. Den största utmaningen i React är dock hur vi hanterar ID-kopplingar när vi börjar dela upp vårt formulär i återanvändbara komponenter.
+        </p>
+
+        <h4>Fällan med återanvända komponenter</h4>
+        <p>
+            Om vi hårdkodar ett ID inne i en komponent som används flera gånger, får vi flera element på samma sida med samma ID.
+        </p>
+        <blockquote>
+            <strong>För skärmläsaren:</strong> Om två fält har samma ID blir kopplingen till etiketten "trasig". Det kan innebära att när jag tabbar till ett fält för "Stad", läser rösten istället upp etiketten för "Gatuadress".
+        </blockquote>
+
+        <div class="tip-box">
+            <p><strong>Ett tips på vägen:</strong> Använd en <em>Accessibility Linter</em>. Det fungerar som en digital korrekturläsare som varnar dig direkt om du råkar glömma <code>htmlFor</code> eller andra viktiga attribut.</p>
+        </div>
+    </div>
+</section>
+
     </main>
 
 <script>
@@ -658,6 +816,24 @@ menuList.addEventListener('keydown', (e) => {
         });
     }
 });
+
+/* ============================================================
+   KAPITEL 10: HTML VS REACT (Simulering av React-fokus)
+   ============================================================ */
+// Här simulerar vi hur React hanterar att "tappa" fokus vid rendering
+const reactSimBtn = document.getElementById('react-sim-btn');
+
+if (reactSimBtn) {
+    reactSimBtn.addEventListener('click', () => {
+        console.log("Simulerar React-rendering: Flyttar fokus till rubrik...");
+        // I React skulle detta ske i en useEffect vid sidbyte
+        const newHeading = document.querySelector('#keyboard-chapter h2');
+        if (newHeading) {
+            newHeading.setAttribute('tabindex', '-1');
+            newHeading.focus();
+        }
+    });
+}
 </script>
 
 </body>
