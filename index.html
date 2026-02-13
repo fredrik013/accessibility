@@ -16,19 +16,21 @@
         <p><strong>Skapad av: Fredrik Andersson</strong></p>
         
         <nav aria-label="Innehållsförteckning">
-            <h2 class="sr-only">Innehållsförteckning</h2>
-            <ul>
-                <li><a href="#about">Om guiden</a></li>
-                <li><a href="#aria-labels">1. Namnge det osynliga (Aria-labels)</a></li>
-                <li><a href="#links-vs-buttons">2. Länkar eller Knappar?</a></li>
-                <li><a href="#search-example">3. Sökfunktionen (Relationer)</a></li>
-                <li><a href="#naming-objects">4. Namngivning av objekt (Bilder & Ikoner)</a></li>
-                <li><a href="#tables">5. Optimera tabeller (Struktur & Relationer)</a></li>
-                <li><a href="#forms-chapter">6. Tillgängliga Formulär</a></li>
-                <li><a href="#check-radio-chapter">7. Checkboxar, Radioknappar och Brytare</a></li>
-                <li><a href="#menus-chapter">8. Menyer och Dropdowns</a></li>
-            </ul>
-        </nav>
+    <h2 class="sr-only">Innehållsförteckning</h2>
+    <ol>
+        <li style="list-style-type: none;"><a href="#about">Om guiden</a></li>
+        <li value="1"><a href="#aria-labels">Namnge det osynliga (Aria-labels)</a></li>
+        
+        <li><a href="#links-vs-buttons">Länkar eller Knappar?</a></li>
+        <li><a href="#search-example">Sökfunktionen (Relationer)</a></li>
+        <li><a href="#naming-objects">Namngivning av objekt (Bilder & Ikoner)</a></li>
+        <li><a href="#tables">Optimera tabeller (Struktur & Relationer)</a></li>
+        <li><a href="#forms-chapter">Tillgängliga Formulär</a></li>
+        <li><a href="#check-radio-chapter">Checkboxar, Radioknappar och Brytare</a></li>
+        <li><a href="#menus-chapter">Menyer och Dropdowns</a></li>
+        <li><a href="#keyboard-chapter">Tangentbordsnavigering</a></li>
+    </ol>
+</nav>
     </header>
 
     <main id="main-content" tabindex="-1">
@@ -468,31 +470,195 @@
     </ul>
 </section>
 
+<section id="keyboard-chapter">
+    <h2>9. Tangentbordsnavigering: Grunden i allt</h2>
+    <p class="explanation">
+        Om en sida inte går att använda utan mus, är den i praktiken trasig. För oss som använder skärmläsare eller motoriska hjälpmedel är tangentbordet vår enda väg genom webben.
+    </p>
+
+    <div class="example-box">
+        <h3>1. Fokusmarkeringen (Outline)</h3>
+        <p>Utan en visuell markör vet en tangentbordsanvändare inte var de befinner sig. Det är som att skriva med en osynlig markör.</p>
+        <pre><code>
+/* Skapa en högkontrast-ram som syns på alla bakgrunder */
+:focus {
+    outline: 3px solid #FFD700;
+    outline-offset: 4px;
+}
+        </code></pre>
+    </div>
+
+    <div class="example-box">
+        <h3>2. Skip links: Snabbfilen till innehållet</h3>
+        <p>
+            Tänk dig att tabba genom 50 menyalternativ på varje ny sida. En "Skip link" är en dold länk som ligger <strong>allra först i din HTML</strong>. Den blir synlig först när man trycker på Tabb.
+        </p>
+        <pre><code>
+/* HTML: Läggs direkt efter body-taggen */
+&lt;a href="#main-content" class="skip-link"&gt;Hoppa till innehåll&lt;/a&gt;
+
+/* CSS: Göm länken tills den får fokus */
+.skip-link {
+    position: absolute;
+    top: -100px;
+    left: 0;
+}
+.skip-link:focus {
+    top: 0;
+    background: #000;
+    color: #fff;
+    padding: 10px;
+}
+        </code></pre>
+    </div>
+
+    <div class="example-box">
+        <h3>3. Logisk Tabb-ordning & Tabindex</h3>
+        <p>
+            Webbläsaren följer din HTML-struktur. Om du flyttar element visuellt med CSS, kommer tabben fortfarande följa koden. 
+        </p>
+        <ul>
+            <li><strong>tabindex="0"</strong>: Gör ett element tabbbart i sin naturliga ordning.</li>
+            <li><strong>tabindex="-1"</strong>: Tar bort elementet från tabb-ordningen.</li>
+            <li><strong>Varning:</strong> Använd aldrig <code>tabindex="1"</code> eller högre. Det skapar en ologisk ordning som förvirrar användaren.</li>
+        </ul>
+    </div>
+
+<div class="example-box">
+    <h3>4. Interaktiv meny: Setup & Fullständig interaktion</h3>
+    <p>För att en meny ska kännas "äkta" måste den svara på mer än bara klick. Den behöver stödja piltangenter, Escape och val via tangentbordet (Enter/Mellanslag).</p>
+
+    <h4>HTML: Kopplingen mellan knapp och lista</h4>
+    <p>Vi använder <code>aria-controls</code> för att peka på listans <code>id</code>, och <code>aria-expanded</code> för att berätta om menyn är öppen.</p>
+    
+    <pre><code>
+&lt;button type="button" id="demo-menu-btn" aria-haspopup="true" aria-expanded="false" aria-controls="demo-menu-list"&gt;
+    Inställningar
+&lt;/button&gt;
+    </code></pre>
+
+    <h4>Interaktivt Demo</h4>
+    <div style="margin: 20px 0; padding: 20px; background: #eee; border-radius: 8px; border: 1px solid #ccc;">
+        <button type="button" id="demo-menu-btn" aria-haspopup="true" aria-expanded="false" aria-controls="demo-menu-list">
+            Inställningar (Tryck Enter/Space)
+        </button>
+        
+        <ul id="demo-menu-list" style="display: none; list-style: none; padding: 10px; border: 2px solid #333; width: 220px; background: white; margin-top: 10px;">
+            <li><a href="#" class="menu-item" style="display: block; padding: 8px; text-decoration: none; color: black; border-bottom: 1px solid #eee;">Profil</a></li>
+            <li><a href="#" class="menu-item" style="display: block; padding: 8px; text-decoration: none; color: black; border-bottom: 1px solid #eee;">Säkerhet</a></li>
+            <li><a href="#" class="menu-item" style="display: block; padding: 8px; text-decoration: none; color: black;">Logga ut</a></li>
+        </ul>
+    </div>
+
+    <h4>JavaScript: Logiken för pilar, val och Escape</h4>
+    <pre><code>
+menuList.addEventListener('keydown', (e) => {
+    const items = Array.from(menuItems);
+    const index = items.indexOf(document.activeElement);
+
+    switch (e.key) {
+        case 'ArrowDown':
+            e.preventDefault();
+            items[(index + 1) % items.length].focus();
+            break;
+        case 'ArrowUp':
+            e.preventDefault();
+            items[(index - 1 + items.length) % items.length].focus();
+            break;
+        case 'Enter':
+        case ' ':
+            e.preventDefault();
+            document.activeElement.click();
+            break;
+        case 'Escape':
+            toggleMenu(false);
+            menuBtn.focus(); // Skicka tillbaka fokus!
+            break;
+    }
+});
+    </code></pre>
+</div>
+
+<div class="tip-box">
+    <p>
+        <strong>Vikten av Escape och Fokus-retur:</strong> När du stänger en meny med Escape-tangenten är det kritiskt att du flyttar tillbaka fokus till knappen som öppnade den. Om fokus bara "försvinner" hamnar jag som använder skärmläsare oftast längst upp på sidan igen, vilket är extremt frustrerande. Genom att köra <code>menuBtn.focus()</code> i din Escape-logik håller du användaren på rätt plats.
+    </p>
+</div>
+</section>
+
     </main>
 
 <script>
-        const btn = document.getElementById('menu-btn');
-        const list = document.getElementById('dropdown-list');
+    document.addEventListener('DOMContentLoaded', () => {
 
-        btn.addEventListener('click', () => {
-            const isExpanded = btn.getAttribute('aria-expanded') === 'true';
-            
-            // Växla status
-            btn.setAttribute('aria-expanded', !isExpanded);
-            
-            // Visa/dölj listan visuellt
-            list.style.display = isExpanded ? 'none' : 'block';
+    /* ============================================================
+       KAPITEL 8: MENYER OCH DROPDOWNS (Logik för huvudmenyn)
+       Hanterar öppna/stäng och grundläggande ARIA-status.
+       ============================================================ */
+    const navBtn = document.getElementById('main-nav-btn'); // Justera ID efter din kod
+    const navList = document.getElementById('main-nav-list');
+
+    if (navBtn && navList) {
+        navBtn.addEventListener('click', () => {
+            const isExpanded = navBtn.getAttribute('aria-expanded') === 'true';
+            navBtn.setAttribute('aria-expanded', !isExpanded);
+            navList.style.display = isExpanded ? 'none' : 'block';
+        });
+    }
+
+
+    /* ============================================================
+       KAPITEL 9: TANGENTBORDSNAVIGERING (Logik för interaktiv demo)
+       Inkluderar pil-navigering, Enter/Space-val och Fokus-retur.
+       ============================================================ */
+    const demoBtn = document.getElementById('demo-menu-btn');
+    const demoList = document.getElementById('demo-menu-list');
+    const demoItems = demoList ? demoList.querySelectorAll('.menu-item') : [];
+
+    if (demoBtn && demoList) {
+        // Funktion för att hantera öppning/stängning i demot
+        function toggleDemoMenu(state) {
+            demoBtn.setAttribute('aria-expanded', state);
+            demoList.style.display = state ? 'block' : 'none';
+            if (state && demoItems.length > 0) {
+                demoItems[0].focus(); // Flytta fokus till första alternativet
+            }
+        }
+
+        // Öppna/stäng vid klick på knappen
+        demoBtn.addEventListener('click', () => {
+            const isOpen = demoBtn.getAttribute('aria-expanded') === 'true';
+            toggleDemoMenu(!isOpen);
         });
 
-        // Stäng menyn med Escape-tangenten (viktigt för tillgänglighet!)
-        document.addEventListener('keydown', (e) => {
-            if (e.key === 'Escape' && btn.getAttribute('aria-expanded') === 'true') {
-                btn.setAttribute('aria-expanded', 'false');
-                list.style.display = 'none';
-                btn.focus(); // Skicka tillbaka fokus till knappen
+        // Avancerad tangentbordslyssnare för pil-navigering
+        demoList.addEventListener('keydown', (e) => {
+            const items = Array.from(demoItems);
+            const currentIndex = items.indexOf(document.activeElement);
+
+            switch (e.key) {
+                case 'ArrowDown':
+                    e.preventDefault(); // Stoppa sidscrolling
+                    items[(currentIndex + 1) % items.length].focus();
+                    break;
+                case 'ArrowUp':
+                    e.preventDefault();
+                    items[(currentIndex - 1 + items.length) % items.length].focus();
+                    break;
+                case 'Enter':
+                case ' ': // Mellanslag
+                    e.preventDefault();
+                    document.activeElement.click(); // Aktivera länken/alternativet
+                    break;
+                case 'Escape':
+                    toggleDemoMenu(false);
+                    demoBtn.focus(); // KRITISKT: Fokus tillbaka till knappen
+                    break;
             }
         });
-    </script>
+    }
+});
+</script>
 
 </body>
 </html>
