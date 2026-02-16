@@ -17,9 +17,11 @@
         
         <nav aria-label="Innehållsförteckning">
     <h2 class="sr-only">Innehållsförteckning</h2>
+<ul style="list-style-type: none; padding: 0; margin-bottom: 10px;">
+<li><a href="#about">Om guiden</a></li>
+    </ul>
     <ol>
-        <li style="list-style-type: none;"><a href="#about">Om guiden</a></li>
-        <li value="1"><a href="#aria-labels">Namnge det osynliga (Aria-labels)</a></li>
+                <li><a href="#aria-labels">Namnge det osynliga (Aria-labels)</a></li>
         
         <li><a href="#links-vs-buttons">Länkar eller Knappar?</a></li>
         <li><a href="#search-example">Sökfunktionen (Relationer)</a></li>
@@ -251,7 +253,7 @@
                     läser skärmläsaren inte bara upp "15", utan den säger "Pris: 15". Det ger sammanhang!
                 </p>
             </div>
-
+          
             <div class="tip-box">
                 <strong>Fredriks tips:</strong> Använd aldrig tabeller för att bygga layout (design). 
                 Tabeller ska bara användas för att visa data. Om du vill placera saker bredvid varandra, 
@@ -381,22 +383,51 @@
         </fieldset>
     </div>
 
-    <h3>Brytare (Toggles) och "Tryckt"-status</h3>
+<h3>Brytare (Toggles) och "Tryckt"-status</h3>
+<p>
+    Ibland vill vi ha en knapp som fungerar som en strömbrytare (PÅ/AV), till exempel för att aktivera mörkt läge. Här använder vi <code>aria-pressed</code>. Det talar om för min skärmläsare om knappen är "nedtryckt" eller inte.
+</p>
+
+<div class="example-box">
+    <p><strong>✅ Kodexempel för en brytare:</strong></p>
+    <pre><code>&lt;!-- aria-pressed="true" betyder att knappen är aktiv/nedtryckt --&gt;
+&lt;button 
+    type="button" 
+    aria-pressed="true" 
+    onclick="this.setAttribute('aria-pressed', this.getAttribute('aria-pressed') === 'true' ? 'false' : 'true')"&gt;
+    Mörkt läge
+&lt;/button&gt;</code></pre>
+</div>
+
+
+
+<div class="tip-box">
     <p>
-        Ibland vill vi ha en knapp som fungerar som en strömbrytare (PÅ/AV). Här använder vi <code>aria-pressed</code> för att skärmläsaren ska säga "nedtryckt" eller "ej nedtryckt".
+        <strong>Skärmläsar-tips:</strong> När en knapp har <code>aria-pressed="true"</code>, säger min skärmläsare ofta "Nedtryckt". Det är ett fantastiskt sätt att bekräfta för mig att en inställning faktiskt har blivit aktiverad utan att jag behöver leta efter andra tecken på sidan.
     </p>
+</div>
 
-    <div class="example-box">
-        <button type="button" aria-pressed="true" onclick="this.setAttribute('aria-pressed', this.getAttribute('aria-pressed') === 'true' ? 'false' : 'true')">
-            Mörkt läge
-        </button>
-    </div>
+    <div class="explanation">
+    <h3>När standard-HTML inte räcker till</h3>
+    <p>
+        Om du använder ett UI-bibliotek eller bygger egna checkboxar med CSS, tappar man ofta den inbyggda tillgängligheten. Då måste vi hjälpa skärmläsaren med ARIA.
+    </p>
+    <ul>
+        <li><strong>aria-checked:</strong> Berättar om boxen är ikryssad. Viktigt om du inte använder en riktig <code>&lt;input type="checkbox"&gt;</code>.</li>
+        <li><strong>Indeterminate (Blandat läge):</strong> Om en "Välj alla"-box bara har vissa underliggande val markerade, kan du sätta <code>aria-checked="mixed"</code>. Det är guld värt för mig!</li>
+    </ul>
+</div>
 
-    <div class="tip-box">
-        <p>
-            <strong>Skärmläsar-tips:</strong> När en knapp har <code>aria-pressed="true"</code>, säger min skärmläsare ofta "Nedtryckt". Detta är perfekt för inställningar som ska vara bestående, till exempel att slå på eller av ett filter.
-        </p>
-    </div>
+<div class="code-block">
+    <p><strong>✅ Exempel på checkbox med "blandat" läge:</strong></p>
+    <pre><code>&lt;div 
+  role="checkbox" 
+  aria-checked="mixed" 
+  tabindex="0" 
+  aria-labelledby="label-id"&gt;
+&lt;/div&gt;
+&lt;span id="label-id"&gt;Välj alla tillbehör&lt;/span&gt;</code></pre>
+</div>
 </section>
 
 <section id="menus-chapter">
@@ -407,37 +438,61 @@
 
     <hr>
 
-    <h3>Typ A: Navigeringsmenyer (Utfällbara)</h3>
+<h3>Typ A: Navigeringsmenyer (Utfällbara)</h3>
     <p>
-        Dessa används när du vill visa en lista med länkar eller funktioner. Här måste vi kommunicera tillståndet manuellt eftersom vi ofta använder knappar för att styra listor.
+        Dessa används när du vill visa en lista med länkar eller funktioner. Här måste vi kommunicera tillståndet manuellt via JavaScript.
     </p>
 
     <div class="example-box">
         <button 
             type="button" 
-            id="menu-btn" 
+            id="nav-menu-btn" 
             aria-haspopup="true" 
             aria-expanded="false" 
-            aria-controls="dropdown-list"
+            aria-controls="nav-dropdown-list"
         >
-            Inställningar
+            Inställningar (Klicka för att testa)
         </button>
 
-        <ul id="dropdown-list" style="display: none; list-style: none; padding: 10px; border: 1px solid #ccc;">
+        <ul id="nav-dropdown-list" style="display: none; list-style: none; padding: 10px; border: 1px solid #ccc; background: #fff; margin-top: 5px;">
             <li><a href="#">Min profil</a></li>
-            <li><a href="#">Säkerhetsinställningar</a></li>
+            <li><a href="#">Säkerhet</a></li>
             <li><a href="#">Logga ut</a></li>
         </ul>
     </div>
 
-    <p class="explanation">
-        <strong>Viktiga attribut för Navigeringsmenyer:</strong><br>
-        * <code>aria-haspopup="true"</code>: Förvarnar om att knappen öppnar något extra.<br>
-        * <code>aria-expanded</code>: Ändras mellan <em>true</em> och <em>false</em> via JavaScript så att jag hör "Öppen" eller "Stängd".<br>
-        * <code>aria-controls</code>: Kopplar ihop knappen med listans unika ID.
-    </p>
+    <h4>Koden bakom funktionen:</h4>
+    <div class="code-block">
+        <pre><code>&lt;!-- HTML: Knappen styr listan via aria-controls --&gt;
+&lt;button 
+  id="nav-menu-btn" 
+  aria-haspopup="true" 
+  aria-expanded="false" 
+  aria-controls="nav-dropdown-list"&gt;
+  Inställningar
+&lt;/button&gt;
 
+&lt;!-- JavaScript: Uppdatera tillståndet vid klick --&gt;
+const btn = document.getElementById('nav-menu-btn');
+const list = document.getElementById('nav-dropdown-list');
+
+btn.addEventListener('click', () => {
+    const isExpanded = btn.getAttribute('aria-expanded') === 'true';
     
+    // 1. Uppdatera attributet så skärmläsaren säger "Öppen" eller "Stängd"
+    btn.setAttribute('aria-expanded', !isExpanded);
+    
+    // 2. Visa eller dölj listan visuellt
+    list.style.display = isExpanded ? 'none' : 'block';
+});</code></pre>
+    </div>
+
+    <p class="explanation">
+        <strong>Varför detta är viktigt:</strong><br>
+        * <code>aria-haspopup="true"</code>: Förvarnar mig om att knappen öppnar något extra.<br>
+        * <code>aria-expanded</code>: Detta är "tungan" på vågen. Utan detta vet jag inte om mitt klick gjorde något.<br>
+        * <code>aria-controls</code>: Skapar den tekniska kopplingen till listan.
+    </p>
 
     <hr>
 
@@ -738,6 +793,22 @@ useEffect(() => {
             <strong>För skärmläsaren:</strong> Om två fält har samma ID blir kopplingen till etiketten "trasig". Det kan innebära att när jag tabbar till ett fält för "Stad", läser rösten istället upp etiketten för "Gatuadress".
         </blockquote>
 
+        <div class="explanation">
+    <h4>JavaScript-krocken: htmlFor</h4>
+    <p>
+        I vanlig HTML använder vi <code>for</code> för att koppla en label till ett ID. Men i React skriver vi JSX, som egentligen är JavaScript. Eftersom ordet <code>for</code> redan används för loopar i JavaScript, kan React inte använda det som ett attributnamn.
+    </p>
+    <p>
+        <strong>Lösningen:</strong> Vi använder <code>htmlFor</code>. React "översätter" sedan detta till ett vanligt <code>for</code>-attribut i den färdiga webbsidan så att min skärmläsare förstår kopplingen.
+    </p>
+</div>
+
+<div class="code-block">
+    <pre><code>// I React (JSX):
+&lt;label htmlFor="email-input"&gt;E-post:&lt;/label&gt;
+&lt;input id="email-input" type="email" /&gt;</code></pre>
+</div>
+
         <div class="tip-box">
             <p><strong>Ett tips på vägen:</strong> Använd en <em>Accessibility Linter</em>. Det fungerar som en digital korrekturläsare som varnar dig direkt om du råkar glömma <code>htmlFor</code> eller andra viktiga attribut.</p>
         </div>
@@ -753,16 +824,19 @@ useEffect(() => {
        KAPITEL 8: MENYER OCH DROPDOWNS (Logik för huvudmenyn)
        Hanterar öppna/stäng och grundläggande ARIA-status.
        ============================================================ */
-    const navBtn = document.getElementById('main-nav-btn'); // Justera ID efter din kod
-    const navList = document.getElementById('main-nav-list');
+// Enkel logik för att växla menyn och uppdatera aria-expanded
+        const navBtn = document.getElementById('nav-menu-btn');
+        const navList = document.getElementById('nav-dropdown-list');
 
-    if (navBtn && navList) {
-        navBtn.addEventListener('click', () => {
-            const isExpanded = navBtn.getAttribute('aria-expanded') === 'true';
-            navBtn.setAttribute('aria-expanded', !isExpanded);
-            navList.style.display = isExpanded ? 'none' : 'block';
-        });
-    }
+        if (navBtn && navList) {
+            navBtn.addEventListener('click', () => {
+                const isExpanded = navBtn.getAttribute('aria-expanded') === 'true';
+                
+                // Växla status
+                navBtn.setAttribute('aria-expanded', !isExpanded);
+                navList.style.display = isExpanded ? 'none' : 'block';
+            });
+        }
 
 
     /* ============================================================
