@@ -593,7 +593,7 @@ btn.addEventListener('click', () => {
 &lt;/button&gt;
     </code></pre>
 
-<h4>Interaktivt Demo</h4>
+    <h4>Interaktivt Demo</h4>
     <div style="margin: 20px 0; padding: 20px; background: #eee; border-radius: 8px; border: 1px solid #ccc;">
         <button type="button" id="demo-menu-btn" aria-haspopup="true" aria-expanded="false" aria-controls="demo-menu-list">
             Inställningar (Tryck Enter/Space)
@@ -756,7 +756,9 @@ function App() {
 }
         </code></pre>
 
-                <p>
+        
+
+        <p>
             Genom att använda <code>aria-atomic="true"</code> tvingar vi skärmläsaren att läsa upp hela meningen varje gång, även om bara sidnamnet ändras. Det gör att jag som användare aldrig behöver tveka på var jag har hamnat.
         </p>
     </div>
@@ -775,10 +777,6 @@ useEffect(() => {
         <p>
             Genom att flytta fokus till rubriken bekräftar vi för skärmläsaren att användaren har landat rätt. Skärmläsaren börjar då läsa upp rubriken direkt.
         </p>
-        <div style="margin-top: 20px; padding: 15px; background: #f0f7ff; border: 1px dashed #007bff; border-radius: 8px;">
-        <p><strong>Prova själv:</strong> Klicka på knappen nedan för att simulera att du byter sida i en React-app.</p>
-        <button type="button" id="react-sim-btn">Simulera sidbyte (Flytta fokus till toppen)</button>
-    </div>
     </div>
 
     <div class="example-box">
@@ -819,7 +817,98 @@ useEffect(() => {
 
     </main>
 
-<script src="script.js"></script>
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+
+    /* ============================================================
+       KAPITEL 8: MENYER OCH DROPDOWNS (Logik för huvudmenyn)
+       Hanterar öppna/stäng och grundläggande ARIA-status.
+       ============================================================ */
+// Enkel logik för att växla menyn och uppdatera aria-expanded
+        const navBtn = document.getElementById('nav-menu-btn');
+        const navList = document.getElementById('nav-dropdown-list');
+
+        if (navBtn && navList) {
+            navBtn.addEventListener('click', () => {
+                const isExpanded = navBtn.getAttribute('aria-expanded') === 'true';
+                
+                // Växla status
+                navBtn.setAttribute('aria-expanded', !isExpanded);
+                navList.style.display = isExpanded ? 'none' : 'block';
+            });
+        }
+
+
+    /* ============================================================
+       KAPITEL 9: TANGENTBORDSNAVIGERING (Logik för interaktiv demo)
+       Inkluderar pil-navigering, Enter/Space-val och Fokus-retur.
+       ============================================================ */
+    const demoBtn = document.getElementById('demo-menu-btn');
+    const demoList = document.getElementById('demo-menu-list');
+    const demoItems = demoList ? demoList.querySelectorAll('.menu-item') : [];
+
+    if (demoBtn && demoList) {
+        // Funktion för att hantera öppning/stängning i demot
+        function toggleDemoMenu(state) {
+            demoBtn.setAttribute('aria-expanded', state);
+            demoList.style.display = state ? 'block' : 'none';
+            if (state && demoItems.length > 0) {
+                demoItems[0].focus(); // Flytta fokus till första alternativet
+            }
+        }
+
+        // Öppna/stäng vid klick på knappen
+        demoBtn.addEventListener('click', () => {
+            const isOpen = demoBtn.getAttribute('aria-expanded') === 'true';
+            toggleDemoMenu(!isOpen);
+        });
+
+        // Avancerad tangentbordslyssnare för pil-navigering
+        demoList.addEventListener('keydown', (e) => {
+            const items = Array.from(demoItems);
+            const currentIndex = items.indexOf(document.activeElement);
+
+            switch (e.key) {
+                case 'ArrowDown':
+                    e.preventDefault(); // Stoppa sidscrolling
+                    items[(currentIndex + 1) % items.length].focus();
+                    break;
+                case 'ArrowUp':
+                    e.preventDefault();
+                    items[(currentIndex - 1 + items.length) % items.length].focus();
+                    break;
+                case 'Enter':
+                case ' ': // Mellanslag
+                    e.preventDefault();
+                    document.activeElement.click(); // Aktivera länken/alternativet
+                    break;
+                case 'Escape':
+                    toggleDemoMenu(false);
+                    demoBtn.focus(); // KRITISKT: Fokus tillbaka till knappen
+                    break;
+            }
+        });
+    }
+});
+
+/* ============================================================
+   KAPITEL 10: HTML VS REACT (Simulering av React-fokus)
+   ============================================================ */
+// Här simulerar vi hur React hanterar att "tappa" fokus vid rendering
+const reactSimBtn = document.getElementById('react-sim-btn');
+
+if (reactSimBtn) {
+    reactSimBtn.addEventListener('click', () => {
+        console.log("Simulerar React-rendering: Flyttar fokus till rubrik...");
+        // I React skulle detta ske i en useEffect vid sidbyte
+        const newHeading = document.querySelector('#keyboard-chapter h2');
+        if (newHeading) {
+            newHeading.setAttribute('tabindex', '-1');
+            newHeading.focus();
+        }
+    });
+}
+</script>
 
 </body>
 </html>
