@@ -570,15 +570,32 @@ btn.addEventListener('click', () => {
     </div>
 
     <div class="example-box">
-        <h3>3. Logisk Tabb-ordning & Tabindex</h3>
-        <p>
-            Webbläsaren följer din HTML-struktur. Om du flyttar element visuellt med CSS, kommer tabben fortfarande följa koden. 
-        </p>
-        <ul>
-            <li><strong>tabindex="0"</strong>: Gör ett element tabbbart i sin naturliga ordning.</li>
-            <li><strong>tabindex="-1"</strong>: Tar bort elementet från tabb-ordningen.</li>
-            <li><strong>Varning:</strong> Använd aldrig <code>tabindex="1"</code> eller högre. Det skapar en ologisk ordning som förvirrar användaren.</li>
-        </ul>
+    <h3>3. Logisk Tabb-ordning & Tabindex</h3>
+<p>
+    Webbläsaren följer din HTML-struktur som en karta. Om du flyttar element visuellt med CSS (t.ex. med <code>flex-direction: column-reverse</code>), kommer tabben fortfarande följa koden, inte ögat. Det är därför koden alltid måste vara logisk i grunden.
+</p>
+
+<h4>De tre lägena för tabindex:</h4>
+<ul>
+    <li>
+        <strong><code>tabindex="0"</code> (Gör elementet interaktivt):</strong>
+        Används för att göra element som normalt inte är klickbara (som en <code>&lt;div&gt;</code> eller <code>&lt;span&gt;</code>) till en del av tabb-ordningen. Det hamnar då på sin naturliga plats i flödet.
+        <br><em>När?</em> Om du bygger en egen anpassad komponent som användaren måste kunna nå med tangentbordet.
+    </li>
+    <li>
+        <strong><code>tabindex="-1"</code> (Fokusera, men inte tabba):</strong>
+        Detta är ett "magiskt" värde. Det gör att elementet <strong>inte</strong> går att tabba till i den vanliga loopen, men du kan fortfarande skicka fokus dit programmatiskt med JavaScript.
+        <br><em>När?</em> För att flytta fokus till en rubrik vid sidbyten eller till ett modalt fönster som öppnas.
+    </li>
+    <li>
+        <strong><code>tabindex="1"</code> (och högre) – En varningsflagga:</strong>
+        <strong>Använd aldrig positiva värden.</strong> Det tvingar webbläsaren att hoppa utanför den naturliga ordningen. Det skapar en extremt förvirrande upplevelse för skärmläsaranvändare, då fokus plötsligt kan hoppa helt ologiskt över sidan.
+    </li>
+</ul>
+
+<blockquote>
+    <strong>Regel nummer ett:</strong> Om du kan använda ett naturligt interaktivt element som <code>&lt;button&gt;</code> eller <code>&lt;a&gt;</code>, gör det! Då sköter webbläsaren <code>tabindex</code> automatiskt åt dig.
+</blockquote>
     </div>
 
 <div class="example-box">
